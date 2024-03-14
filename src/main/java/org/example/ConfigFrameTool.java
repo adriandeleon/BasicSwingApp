@@ -6,15 +6,13 @@ import lombok.experimental.UtilityClass;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 import static org.example.App.configFrame;
 import static org.example.App.mainFrame;
 
 @UtilityClass
-public class ConfigurationFrameTool {
+public class ConfigFrameTool {
 
     private static JPanel detailPanel;
 
@@ -28,25 +26,25 @@ public class ConfigurationFrameTool {
             JPanel configPanel = new JPanel(new MigLayout("", "[200!][grow]", "[grow]"));
 
             // Create the master panel
-            JPanel masterPanel = new JPanel(new MigLayout("", "[grow]", "[grow]"));
+            final JPanel masterPanel = new JPanel(new MigLayout("", "[grow]", "[grow]"));
             masterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             // Create the list of configuration options
-            DefaultListModel<String> optionsModel = new DefaultListModel<>();
+            final DefaultListModel<String> optionsModel = new DefaultListModel<>();
             optionsModel.addElement("Appearance");
             optionsModel.addElement("Editor");
             optionsModel.addElement("Plugins");
-            JList<String> optionsList = new JList<>(optionsModel);
+
+            final JList<String> optionsList = new JList<>(optionsModel);
             optionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            optionsList.addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        String selectedOption = optionsList.getSelectedValue();
-                        updateDetailPanel(selectedOption);
-                    }
+
+            optionsList.addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting()) {
+                    String selectedOption = optionsList.getSelectedValue();
+                    updateDetailPanel(selectedOption);
                 }
             });
-            JScrollPane optionsScrollPane = new JScrollPane(optionsList);
+            final JScrollPane optionsScrollPane = new JScrollPane(optionsList);
             masterPanel.add(optionsScrollPane, "grow");
 
             // Create the detail panel
@@ -75,8 +73,8 @@ public class ConfigurationFrameTool {
                 final JSpinner fontSizeSpinner = new JSpinner(new SpinnerNumberModel(12, 8, 24, 1));
                 final JButton applyButton = new JButton("Apply");
 
+                // Apply the appearance configuration settings
                 applyButton.addActionListener(e -> {
-                    // Apply the appearance configuration settings
                     final String selectedTheme = (String) themeComboBox.getSelectedItem();
                     int fontSize = (int) fontSizeSpinner.getValue();
                     applyConfiguration(selectedTheme, fontSize);

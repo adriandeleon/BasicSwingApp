@@ -19,7 +19,7 @@ import static org.example.App.showCloseConfirmDialog;
 public class SystemTrayTool {
 
     /**
-     * Create system tray.
+     * Create a system tray.
      *
      * @param frame the frame
      */
@@ -63,6 +63,7 @@ public class SystemTrayTool {
 
             popupMenu.add(openItem);
             popupMenu.add(exitItem);
+
             trayIcon.setPopupMenu(popupMenu);
 
             try {

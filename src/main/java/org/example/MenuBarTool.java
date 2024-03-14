@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import javax.swing.*;
 
 import static org.example.App.*;
-import static org.example.ConfigurationFrameTool.showConfigFrame;
+import static org.example.ConfigFrameTool.showConfigFrame;
 
 /**
  * The type Menu bar tool.

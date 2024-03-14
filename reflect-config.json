@@ -1,0 +1,20 @@
+[
+  {
+    "name": "java.awt.Window",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "javax.swing.JFrame",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "javax.swing.JComponent",
+    "methods": [
+      { "name": "paintComponent", "parameterTypes": ["java.awt.Graphics"] }
+    ]
+  }
+]

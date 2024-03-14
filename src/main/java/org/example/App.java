@@ -64,7 +64,7 @@ public class App {
     }
 
     /**
-     * Show user guide.
+     * Show the user guide.
      *
      */
     public static void showUserGuide() {
@@ -82,6 +82,7 @@ public class App {
     public static void showCloseConfirmDialog() {
         final JOptionPane optionPane = new JOptionPane("Are you sure you want to close the application?",
                 JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+
         final JDialog dialog = optionPane.createDialog(mainFrame, "Confirm Close");
 
         dialog.setLocationRelativeTo(null); // Center the dialog on the screen

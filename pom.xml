@@ -14,10 +14,12 @@
 
     <properties>
         <java.version>21</java.version>
+        <native.maven.plugin.version>0.10.1</native.maven.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <app.mainClass>org.example.App</app.mainClass>
+        <imageName>SwingApp</imageName>
     </properties>
 
     <dependencies>
@@ -97,6 +99,19 @@
             <version>11.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>1.4.3</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>
@@ -104,21 +119,16 @@
             <id>native</id>
             <build>
                 <plugins>
-                    <!-- https://mvnrepository.com/artifact/org.graalvm.buildtools/native-maven-plugin -->
-                    <!-- https://github.com/graalvm/native-build-tools -->
-                    <!-- Plugin that provides support for building and testing of GraalVM native images (ahead-of-time compiled Java code) -->
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.9.28</version>
-                        <extensions>true</extensions>
+                        <version>${native.maven.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>build-native</id>
                                 <goals>
                                     <goal>compile-no-fork</goal>
                                 </goals>
-                                <!--When the 'native' profile is active, the 'package' phase will generate the native executable.-->
                                 <phase>package</phase>
                             </execution>
                             <execution>
@@ -130,6 +140,9 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <metadataRepository>
+                                <enabled>true</enabled>
+                            </metadataRepository>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -139,70 +152,86 @@
 
     <build>
         <plugins>
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
-            <!-- https://maven.apache.org/plugins/maven-compiler-plugin/ -->
-            <!-- The Compiler Plugin is used to compile the sources of your project -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>java-agent</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>${app.mainClass}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>native</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${project.build.directory}/${imageName}</executable>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.30</version>
-                        </path>
-                    </annotationProcessorPaths>
+                    <target>${maven.compiler.source}</target>
                 </configuration>
             </plugin>
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
-            <!-- https://maven.apache.org/plugins/maven-shade-plugin/ -->
-            <!-- This plugin provides the capability to package the artifact in an uber-jar,
-                 including its dependencies and to shade - i.e. rename - the packages of some of the dependencies.-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>${app.mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${app.mainClass}</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- https://mvnrepository.com/artifact/org.gaul/modernizer-maven-plugin -->
-            <!-- https://github.com/gaul/modernizer-maven-plugin -->
-            <!--Modernizer Maven Plugin detects uses of legacy APIs which modern Java versions supersede.
-                These modern APIs are often more performant, safer, and idiomatic than the legacy equivalents.-->
-            <plugin>
-                <groupId>org.gaul</groupId>
-                <artifactId>modernizer-maven-plugin</artifactId>
-                <version>2.7.0</version>
                 <configuration>
-                    <javaVersion>${java.version}</javaVersion>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>${app.mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>modernizer</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>modernizer</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
 

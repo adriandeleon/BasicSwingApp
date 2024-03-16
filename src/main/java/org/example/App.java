@@ -1,17 +1,19 @@
 package org.example;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
 /**
- * The type App.
+ * The App.
  */
 public class App {
     public static JLabel statusLabel;
     public static JFrame mainFrame;
     public static JFrame configFrame;
+    public static Config config;
 
     /**
      * The entry point of application.
@@ -37,21 +39,25 @@ public class App {
         // Set the menu bar for the frame
         mainFrame.setJMenuBar(MenuBarTool.createMenuBar());
 
-        // Create a status bar
-        //final JPanel statusPanel = new JPanel();
+        // Create a status bar.
         final JPanel statusPanel = new JPanel(new MigLayout("", "[grow]", "[]"));
         statusLabel = new JLabel("Status: Ready");
         statusPanel.add(statusLabel);
 
-        // Add the content panel and status bar to the frame
+        // Add the content panel and status bar to the frame.
         mainFrame.getContentPane().setLayout(new MigLayout("", "[grow]", "[grow][]"));
         mainFrame.getContentPane().add(panel, "grow");
         mainFrame.getContentPane().add(statusPanel, "dock south");
 
-        SystemTrayTool.createSystemTray(mainFrame);
 
+        SystemTrayTool.createSystemTray(mainFrame);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
+
+        config = ConfigTool.readConfig();
+
+        ConfigFrameTool.applyConfiguration(config.getString(ConfigTool.CONFIG_STRING_APP_UI_THEME),
+                config.getInt(ConfigTool.CONFIG_STRING_APP_UI_FONT_SIZE));
     }
 
     /**

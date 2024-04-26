@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.experimental.UtilityClass;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.Validate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +66,7 @@ public class ConfigFrameTool {
         configFrame.setVisible(true);
     }
 
-    private static void updateDetailPanel(String selectedOption) {
+    private static void updateDetailPanel(final String selectedOption) {
         detailPanel.removeAll();
 
          final String[] themeItems = {"Light", "Dark"};
@@ -86,22 +87,26 @@ public class ConfigFrameTool {
         detailPanel.repaint();
     }
 
-    private static void appearanceDetailPanel(String[] themeItems) {
+    private static void appearanceDetailPanel(final String[] themeItems) {
         final JLabel themeLabel = new JLabel("Theme:");
         final JComboBox<String> themeComboBox = new JComboBox<>(themeItems);
+
         themeComboBox.setSelectedItem(config.getString(ConfigTool.CONFIG_STRING_APP_UI_THEME));
 
         final JLabel fontSizeLabel = new JLabel("Font Size:");
         final JSpinner fontSizeSpinner = new JSpinner(new SpinnerNumberModel(12, 8, 24, 1));
+
         fontSizeSpinner.setValue(config.getInt(ConfigTool.CONFIG_STRING_APP_UI_FONT_SIZE));
 
         final JButton applyButton = new JButton("Apply");
 
         // Apply the appearance configuration settings
-        applyButton.addActionListener(e -> {
-            final String selectedTheme = (String) themeComboBox.getSelectedItem();
-            int fontSize = (int) fontSizeSpinner.getValue();
-            applyConfiguration(selectedTheme, fontSize);
+        SwingUtilities.invokeLater(() -> {
+            applyButton.addActionListener(e -> {
+                final String selectedTheme = (String) themeComboBox.getSelectedItem();
+                int fontSize = (int) fontSizeSpinner.getValue();
+                applyConfiguration(selectedTheme, fontSize);
+            });
         });
 
         detailPanel.add(themeLabel);
@@ -118,11 +123,14 @@ public class ConfigFrameTool {
         final JCheckBox autoIndentCheckBox = new JCheckBox("Auto Indent");
         final JButton applyButton = new JButton("Apply");
 
-        // Apply the editor configuration settings.
-        applyButton.addActionListener(e -> {
-            int tabSize = (int) tabSizeSpinner.getValue();
-            boolean autoIndent = autoIndentCheckBox.isSelected();
-            // ...
+
+        SwingUtilities.invokeLater(() -> {
+            applyButton.addActionListener(e -> {
+                if(tabSizeSpinner.getValue() instanceof Integer) {
+                    int tabSize = (int) tabSizeSpinner.getValue();
+                }
+                boolean autoIndent = autoIndentCheckBox.isSelected();
+            });
         });
 
         detailPanel.add(tabSizeLabel);
@@ -154,6 +162,8 @@ public class ConfigFrameTool {
     }
 
     public static void applyConfiguration(final String theme, final int fontSize) {
+        Validate.notBlank(theme, "Theme cannot be blank");
+
         // Apply the selected theme.
         if (theme.equals("Dark")) {
             ConfigTool.writeConfig(Map.of(ConfigTool.CONFIG_STRING_APP_UI_THEME, "Dark"));
@@ -171,7 +181,9 @@ public class ConfigFrameTool {
         ConfigTool.writeConfig(Map.of(ConfigTool.CONFIG_STRING_APP_UI_FONT_SIZE, fontSize));
 
         // Update the UI components.
-        SwingUtilities.updateComponentTreeUI(mainFrame);
-        SwingUtilities.updateComponentTreeUI(configFrame);
+        SwingUtilities.invokeLater(() -> {
+            SwingUtilities.updateComponentTreeUI(mainFrame);
+            SwingUtilities.updateComponentTreeUI(configFrame);
+        });
     }
 }

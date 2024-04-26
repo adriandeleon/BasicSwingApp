@@ -1,11 +1,11 @@
 package org.example;
 
-import com.formdev.flatlaf.FlatLightLaf;
 import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * The App.
@@ -22,11 +22,17 @@ public class App {
      * @param args the input arguments
      */
     public static void main(String[] args) {
-        FlatLightLaf.setup();
-
         mainFrame = new JFrame("My Swing App");
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.setSize(700, 600);
+
+        //use the close confirmation dialog when trying to close the app.
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+               showCloseConfirmDialog();
+            }
+        });
 
         //final JPanel panel = new JPanel();
         final JPanel panel = new JPanel(new MigLayout("", "[grow]", "[]10[]"));
@@ -55,42 +61,18 @@ public class App {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 
-        config = ConfigTool.readConfig();
+
+        if (ConfigTool.readConfig().isEmpty()) {
+            showErrorDialog("Cannot read configuration file");
+        }
+        config = ConfigTool.readConfig().get();
 
         ConfigFrameTool.applyConfiguration(config.getString(ConfigTool.CONFIG_STRING_APP_UI_THEME),
                 config.getInt(ConfigTool.CONFIG_STRING_APP_UI_FONT_SIZE));
     }
 
     /**
-     * Show about dialog.
-     *
-     */
-    public static void showAboutDialog() {
-        final String message = """
-                My Swing App
-                Version 1.0
-                Developed by Your Name
-                """;
-        JOptionPane.showMessageDialog(mainFrame, message, "About", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Show the user guide.
-     *
-     */
-    public static void showUserGuide() {
-        final String message = """
-                 Welcome to My Swing App!
-
-                This is a sample user guide.
-                Please refer to the documentation for more information.
-                """;
-        JOptionPane.showMessageDialog(mainFrame, message, "User Guide", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
      * Show close confirm dialog.
-     *
      */
     public static void showCloseConfirmDialog() {
         final JOptionPane optionPane = new JOptionPane("Are you sure you want to close the application?",
@@ -101,9 +83,48 @@ public class App {
         dialog.setLocationRelativeTo(null); // Center the dialog on the screen
         dialog.setVisible(true);
 
-        int option = (Integer) optionPane.getValue();
-        if (option == JOptionPane.YES_OPTION) {
-           System.exit(0);
+        Integer value = (Integer) optionPane.getValue();
+        if (value != null && value == JOptionPane.YES_OPTION) {
+            mainFrame.dispose(); // or any other suitable method to close the window
+            // Perform any necessary cleanup or state saving here
+        }
+    }
+
+    /**
+     * Show about dialog.
+     */
+    public static void showAboutDialog() {
+        final String message = """
+                My Swing App
+                Version 1.0
+                Developed by Your Name
+                """;
+        final String title = "About";
+        showMessageDialog(message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Show the user guide.
+     */
+    public static void showUserGuide() {
+        final String message = """
+                 Welcome to My Swing App!
+
+                This is a sample user guide.
+                Please refer to the documentation for more information.
+                """;
+        final String title = "User Guide";
+        showMessageDialog(message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void showErrorDialog(final String message) {
+        final String title = "error";
+        showMessageDialog(message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void showMessageDialog(final String message, final String title, final Integer optionPaneMessageType) {
+        if (mainFrame != null && mainFrame.isVisible()) {
+            JOptionPane.showMessageDialog(mainFrame, message, title, optionPaneMessageType);
         }
     }
 

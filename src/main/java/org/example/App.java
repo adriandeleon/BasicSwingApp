@@ -88,6 +88,7 @@ public class App {
             if (value != null && value == JOptionPane.YES_OPTION) {
                 mainFrame.dispose(); // or any other suitable method to close the window
                 // Perform any necessary cleanup or state saving here
+                System.exit(0);
             }
         }
     }

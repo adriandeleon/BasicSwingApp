@@ -66,8 +66,12 @@ public class App {
      *
      */
     public static void showAboutDialog() {
-        JOptionPane.showMessageDialog(mainFrame, "My Swing App\nVersion 1.0\nDeveloped by Your Name",
-                "About", JOptionPane.INFORMATION_MESSAGE);
+        final String message = """
+                My Swing App
+                Version 1.0
+                Developed by Your Name
+                """;
+        JOptionPane.showMessageDialog(mainFrame, message, "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -75,11 +79,13 @@ public class App {
      *
      */
     public static void showUserGuide() {
-        JOptionPane.showMessageDialog(mainFrame, """
-                Welcome to My Swing App!
+        final String message = """
+                 Welcome to My Swing App!
 
                 This is a sample user guide.
-                Please refer to the documentation for more information.""", "User Guide", JOptionPane.INFORMATION_MESSAGE);
+                Please refer to the documentation for more information.
+                """;
+        JOptionPane.showMessageDialog(mainFrame, message, "User Guide", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -90,7 +96,7 @@ public class App {
         final JOptionPane optionPane = new JOptionPane("Are you sure you want to close the application?",
                 JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
 
-        final JDialog dialog = optionPane.createDialog(mainFrame, "Confirm Close");
+        final JDialog dialog = optionPane.createDialog(mainFrame, "Confirm Close.");
 
         dialog.setLocationRelativeTo(null); // Center the dialog on the screen
         dialog.setVisible(true);

@@ -8,9 +8,11 @@ import com.typesafe.config.parser.ConfigDocumentFactory;
 import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,10 +24,41 @@ public class ConfigTool {
 
     public static String CONFIG_STRING_APP_UI_THEME = "app.ui.theme";
     public static String CONFIG_STRING_APP_UI_FONT_SIZE = "app.ui.fontsize";
-    public final String userHomeDirectory = System.getProperty("user.home");
-    public final Path configFile = Paths.get(userHomeDirectory, ".SwingApp", "SwingApp.conf");
+    public static final String userHomeDirectory = System.getProperty("user.home");
+    public static final String appConfigDirectory = ".SwingApp";
+    public static final String appConfigFile = "SwingApp.conf";
+    public static final Path configDir = Paths.get(userHomeDirectory, appConfigDirectory);
+    public static final Path configFile = Paths.get(userHomeDirectory, appConfigDirectory, appConfigFile);
 
     public static Optional<Config> readConfig() {
+
+        //Check if the config file exists, if not create a default version
+        if(Files.notExists(configDir)) {
+            try {
+                Files.createDirectory(configDir);
+                final String resourceFileName = appConfigFile;  // Name of the file in the resources folder
+
+                // Get the InputStream for the resource file
+                try (InputStream inputStream = ConfigTool.class.getResourceAsStream("/" + resourceFileName)) {
+                    if (inputStream == null) {
+                        System.out.println("Resource file not found.");
+                        return Optional.empty();
+                    }
+
+                    // Set up the target path
+                    final Path targetPath = Paths.get(configDir.toString(), resourceFileName);
+
+                    // Copy the file
+                    Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (IOException e) {
+                System.err.println("Failed to read configuration: " + e.getMessage());
+            }
+        }
+
         try {
             // Parse the HOCON file into a ConfigDocument.
             final String hoconContent = Files.readString(configFile);

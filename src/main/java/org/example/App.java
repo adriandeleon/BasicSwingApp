@@ -37,7 +37,6 @@ public class App {
             }
         });
 
-        //final JPanel panel = new JPanel();
         final JPanel panel = new JPanel(new MigLayout("", "[grow]", "[]10[]"));
         final JLabel label = new JLabel("Hello, Swing!");
         final JButton button = new JButton("Click Me");

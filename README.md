@@ -40,5 +40,7 @@ After running `jpackage`, look for a SwingApp package in the target directory.
 
 You don't need to install a JDK to run the package or the app after installing it. Everything is provided inside the installer/package.
 
+For more info on jpackage, check this [Baeldung article.](https://www.baeldung.com/java14-jpackage)
+
 
 

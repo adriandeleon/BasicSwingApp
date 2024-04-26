@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
-import static org.example.App.showCloseConfirmDialog;
 
 /**
  * The type System tray tool.
@@ -30,8 +30,8 @@ public class SystemTrayTool {
             Image image;
 
             // Create a tray icon
-            try {
-                 image= ImageIO.read(Objects.requireNonNull(SystemTrayTool.class.getResource("/icons/tray-icon.png")));
+            try (InputStream is = Objects.requireNonNull(SystemTrayTool.class.getResourceAsStream("/icons/tray-icon.png"))) {
+                image = ImageIO.read(is);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -55,11 +55,16 @@ public class SystemTrayTool {
             final MenuItem exitItem = new MenuItem("Exit");
 
             openItem.addActionListener(e -> {
-                frame.setVisible(true);
-                frame.setState(JFrame.NORMAL);
+                if (!frame.isVisible()) {
+                    frame.setVisible(true);
+                }
+
+                if (frame.getState() == JFrame.ICONIFIED) {
+                    frame.setState(JFrame.NORMAL);
+                }
             });
 
-            exitItem.addActionListener(e -> showCloseConfirmDialog());
+            exitItem.addActionListener(e -> App.showCloseConfirmDialog());
 
             popupMenu.add(openItem);
             popupMenu.add(exitItem);

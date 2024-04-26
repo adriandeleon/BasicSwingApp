@@ -5,6 +5,7 @@ import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * The App.
@@ -98,5 +99,11 @@ public class App {
         if (option == JOptionPane.YES_OPTION) {
            System.exit(0);
         }
+    }
+
+    public static void updateStatusLabel(final String newText) {
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText(newText);
+        });
     }
 }

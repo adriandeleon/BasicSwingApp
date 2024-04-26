@@ -4,26 +4,25 @@ import lombok.experimental.UtilityClass;
 
 import javax.swing.*;
 
-import static org.example.App.*;
-import static org.example.ConfigFrameTool.showConfigFrame;
-
 /**
  * The type Menu bar tool.
  */
 @UtilityClass
 public class MenuBarTool {
-    /**
-     * Create menu bar j menu bar.
-     *
-     * @return the j menu bar
-     */
     public static JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
 
-        // Create menus
+        // Add menus to menu bar
+        menuBar.add(createFileMenu());
+        menuBar.add(createEditMenu());
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.add(createHelpMenu());
+
+        return menuBar;
+    }
+
+    private static JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
-        final JMenu editMenu = new JMenu("Edit");
-        final JMenu helpMenu = new JMenu("Help");
 
         // Create menu items
         final JMenuItem newItem = new JMenuItem("New");
@@ -32,23 +31,12 @@ public class MenuBarTool {
         final JMenuItem configItem = new JMenuItem("Configuration");
         final JMenuItem closeApp = new JMenuItem("Close");
 
-        final JMenuItem cutItem = new JMenuItem("Cut");
-        final JMenuItem copyItem = new JMenuItem("Copy");
-        final JMenuItem pasteItem = new JMenuItem("Paste");
-
-        final JMenuItem userGuideItem = new JMenuItem("User Guide");
-        final JMenuItem aboutItem = new JMenuItem("About");
-
         // Add action listeners to menu items
-        newItem.addActionListener(e -> App.statusLabel.setText("Status: New File Created!"));
-        openItem.addActionListener(e -> App.statusLabel.setText("Status: File Opened!"));
-        saveItem.addActionListener(e -> App.statusLabel.setText("Status: File Saved!"));
-        closeApp.addActionListener(e -> showCloseConfirmDialog());
-
-        configItem.addActionListener(e -> showConfigFrame());
-
-        userGuideItem.addActionListener(e -> showUserGuide());
-        aboutItem.addActionListener(e -> showAboutDialog());
+        newItem.addActionListener(e -> App.updateStatusLabel("Status: New File Created!"));
+        openItem.addActionListener(e -> App.updateStatusLabel("Status: File Opened!"));
+        saveItem.addActionListener(e -> App.updateStatusLabel("Status: File Saved!"));
+        closeApp.addActionListener(e -> App.showCloseConfirmDialog());
+        configItem.addActionListener(e -> ConfigFrameTool.showConfigFrame());
 
         // Add menu items to menus
         fileMenu.add(newItem);
@@ -58,21 +46,45 @@ public class MenuBarTool {
         fileMenu.addSeparator();
         fileMenu.add(closeApp);
 
+        return fileMenu;
+    }
+
+    private static JMenu createEditMenu() {
+        final JMenu editMenu = new JMenu("Edit");
+
+        // Create menu items
+        final JMenuItem cutItem = new JMenuItem("Cut");
+        final JMenuItem copyItem = new JMenuItem("Copy");
+        final JMenuItem pasteItem = new JMenuItem("Paste");
+
+        // Add action listeners
+        cutItem.addActionListener(e -> App.updateStatusLabel("Status: Cut!"));
+        copyItem.addActionListener(e -> App.updateStatusLabel("Status: Copy!"));
+        pasteItem.addActionListener(e -> App.updateStatusLabel("Status: Paste!"));
+
+        // Add to menu
         editMenu.add(cutItem);
         editMenu.add(copyItem);
         editMenu.add(pasteItem);
 
+        return editMenu;
+    }
 
+    private static JMenu createHelpMenu() {
+        final JMenu helpMenu = new JMenu("Help");
 
+        // Create menu items
+        final JMenuItem userGuideItem = new JMenuItem("User Guide");
+        final JMenuItem aboutItem = new JMenuItem("About");
+
+        // Add action listeners
+        userGuideItem.addActionListener(e -> App.showUserGuide());
+        aboutItem.addActionListener(e -> App.showAboutDialog());
+
+        // Add to menu
         helpMenu.add(userGuideItem);
         helpMenu.add(aboutItem);
 
-        // Add menus to menu bar
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(Box.createHorizontalGlue()); // Add a horizontal glue to push the help menu to the right
-        menuBar.add(helpMenu);
-
-        return menuBar;
+        return helpMenu;
     }
 }

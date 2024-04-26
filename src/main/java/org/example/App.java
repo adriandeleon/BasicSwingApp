@@ -75,18 +75,20 @@ public class App {
      * Show close confirm dialog.
      */
     public static void showCloseConfirmDialog() {
-        final JOptionPane optionPane = new JOptionPane("Are you sure you want to close the application?",
-                JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+        if (mainFrame != null && mainFrame.isVisible()) {
+            final JOptionPane optionPane = new JOptionPane("Are you sure you want to close the application?",
+                    JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
 
-        final JDialog dialog = optionPane.createDialog(mainFrame, "Confirm Close.");
+            final JDialog dialog = optionPane.createDialog(mainFrame, "Confirm Close.");
 
-        dialog.setLocationRelativeTo(null); // Center the dialog on the screen
-        dialog.setVisible(true);
+            dialog.setLocationRelativeTo(null); // Center the dialog on the screen
+            dialog.setVisible(true);
 
-        Integer value = (Integer) optionPane.getValue();
-        if (value != null && value == JOptionPane.YES_OPTION) {
-            mainFrame.dispose(); // or any other suitable method to close the window
-            // Perform any necessary cleanup or state saving here
+            Integer value = (Integer) optionPane.getValue();
+            if (value != null && value == JOptionPane.YES_OPTION) {
+                mainFrame.dispose(); // or any other suitable method to close the window
+                // Perform any necessary cleanup or state saving here
+            }
         }
     }
 
@@ -129,8 +131,6 @@ public class App {
     }
 
     public static void updateStatusLabel(final String newText) {
-        SwingUtilities.invokeLater(() -> {
-            statusLabel.setText(newText);
-        });
+        SwingUtilities.invokeLater(() -> statusLabel.setText(newText));
     }
 }

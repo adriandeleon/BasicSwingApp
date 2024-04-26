@@ -1,5 +1,6 @@
 package org.example;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
 
@@ -22,6 +23,8 @@ public class App {
      * @param args the input arguments
      */
     public static void main(String[] args) {
+        FlatLightLaf.setup();
+
         mainFrame = new JFrame("My Swing App");
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.setSize(700, 600);

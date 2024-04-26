@@ -182,8 +182,12 @@ public class ConfigFrameTool {
 
         // Update the UI components.
         SwingUtilities.invokeLater(() -> {
-            SwingUtilities.updateComponentTreeUI(mainFrame);
-            SwingUtilities.updateComponentTreeUI(configFrame);
+            if (mainFrame != null) {
+                SwingUtilities.updateComponentTreeUI(mainFrame);
+            }
+            if (configFrame != null) {
+                SwingUtilities.updateComponentTreeUI(configFrame);
+            }
         });
     }
 }

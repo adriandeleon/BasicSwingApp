@@ -4,6 +4,17 @@
 
 ## Building and running the app.
 
+You have three options for running your app:
+- Use a Fat Jar.
+- Create a Installer.
+- Compile your app as a native executable for your platform.
+
+Each one has its pros and cons: A Fat Jar needs a JDK installed on your computer to run, but it is completely platform independent.
+
+You can create an installer with `jpackage`, This will create a self-running app with a custom JDK packaged for your platform. You will need to create one for each platform (Linux, MacOS and Windows)
+
+You can also use [GraalVM](https://www.graalvm.org/) to create a native executable. Your app is no longer platform independent, You will also need to instrument your app before compiling it to an executable.
+
 ### Build and run a Fat Jar:
 
 To build a Fat Jar (with all the dependencies), run:
@@ -39,7 +50,7 @@ Where --type can be one of these options:
 
 After running `jpackage`, look for a SwingApp package in the target directory.
 
-You don't need to install a JDK to run the package or the app after installing it. Everything is provided inside the installer/package.
+You don't need to install a JDK to run the app after installing, everything is provided inside the installer/package.
 
 For more info on jpackage, check this [Baeldung article.](https://www.baeldung.com/java14-jpackage)
 
@@ -48,7 +59,7 @@ For more info on jpackage, check this [Baeldung article.](https://www.baeldung.c
 You will need GraalVM to generate native executables from the jar files:
 
 Download and install the latest version of [GraalVM](https://www.graalvm.org/downloads/)
-Make sure that GraalVM is your default Java JDK. Create a GRAALVM_HOME environment variable, then point your JAVA_HOME to GRAALVM_HOME. Add JAVA_HOME/bin to your PATH variable.
+Make sure that GraalVM is your default Java JDK. Create a `GRAALVM_HOME` environment variable, then point your `JAVA_HOME` to `GRAALVM_HOME`. Add `JAVA_HOME/bin` to your `PATH` variable.
 
 Test that GraalVM is your default JDK by checking your java version:
 
@@ -58,28 +69,34 @@ java -version
 
 Verify that the output looks something like this:
 
-``java -version
+```shell
+java -version
 java version "22" 2024-03-19
 Java(TM) SE Runtime Environment Oracle GraalVM 22+36.1 (build 22+36-jvmci-b02)
 Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 22+36.1 (build 22+36-jvmci-b02, mixed mode, sharing)``
 
 Once you have GraalVM configured as your default JDK, compile your app:
+````
 
+Then compile your app:
 ```shell
 mvn clean package
 ```
 
 You will need to run your app with the graalvm agent to pick up all the reflection/dynamic calls your app makes.
 
-Run this command in your target directory
+Run this command in your target directory:
 ```shell
 java -agentlib:native-image-agent=config-output-dir=config -jar SwingApp-X.X-SNAPSHOT-shaded.jar
 ```
-This will load your app. Click and navigate all around the app, this is important so that the agent picks up all the reflection/dynamic JNI calls.
+This will run your app with the `native-image-agent`. Click and navigate all around the app, this is important so that the agent picks up all the reflection/dynamic JNI calls.
 
 Once that is done, when you exit the app, the agent will have created a `config` folder on the `target` folder.
 
-For native compiling, you will need a C development setup for your platform, for Linux that means GCC and friends, on Mac you can also use GCC or XCode. On Windows you will need to install the Visual Studio Compiler and CLI Tools.
+For native compiling, you will need a C development setup for your platform, for Linux that means GCC and friends, and an on Mac you can also use GCC or XCode. 
+
+
+On Windows you will need to install the [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022).
 
 Now we can create the native executable. Go to the `target` folder and run the following command:
 

@@ -63,7 +63,6 @@ public class SystemTrayTool {
                     frame.setState(JFrame.NORMAL);
                 }
             });
-
             exitItem.addActionListener(e -> App.showCloseConfirmDialog());
 
             popupMenu.add(openItem);

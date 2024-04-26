@@ -9,6 +9,8 @@ import org.apache.commons.lang3.Validate;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.example.App.*;
 
@@ -73,15 +75,9 @@ public class ConfigFrameTool {
 
         switch (selectedOption) {
             // Add appearance configuration components to the detail panel
-            case OPTION_APPEARANCE -> {
-                appearanceDetailPanel(themeItems);
-            }
-            case OPTION_EDITOR -> {
-                editorDetailsPanel();
-            }
-            case OPTION_PLUGINS -> {
-                pluginsDetailPanel();
-            }
+            case OPTION_APPEARANCE -> appearanceDetailPanel(themeItems);
+            case OPTION_EDITOR -> editorDetailsPanel();
+            case OPTION_PLUGINS -> pluginsDetailPanel();
         }
         detailPanel.revalidate();
         detailPanel.repaint();
@@ -101,13 +97,11 @@ public class ConfigFrameTool {
         final JButton applyButton = new JButton("Apply");
 
         // Apply the appearance configuration settings
-        SwingUtilities.invokeLater(() -> {
-            applyButton.addActionListener(e -> {
-                final String selectedTheme = (String) themeComboBox.getSelectedItem();
-                int fontSize = (int) fontSizeSpinner.getValue();
-                applyConfiguration(selectedTheme, fontSize);
-            });
-        });
+        SwingUtilities.invokeLater(() -> applyButton.addActionListener(e -> {
+            final String selectedTheme = (String) themeComboBox.getSelectedItem();
+            int fontSize = (int) fontSizeSpinner.getValue();
+            applyConfiguration(selectedTheme, fontSize);
+        }));
 
         detailPanel.add(themeLabel);
         detailPanel.add(themeComboBox, "wrap");
@@ -123,15 +117,15 @@ public class ConfigFrameTool {
         final JCheckBox autoIndentCheckBox = new JCheckBox("Auto Indent");
         final JButton applyButton = new JButton("Apply");
 
+        AtomicInteger tabSize = new AtomicInteger();
+        AtomicBoolean autoIndent = new AtomicBoolean(false);
 
-        SwingUtilities.invokeLater(() -> {
-            applyButton.addActionListener(e -> {
-                if(tabSizeSpinner.getValue() instanceof Integer) {
-                    int tabSize = (int) tabSizeSpinner.getValue();
-                }
-                boolean autoIndent = autoIndentCheckBox.isSelected();
-            });
-        });
+        SwingUtilities.invokeLater(() -> applyButton.addActionListener(e -> {
+            if(tabSizeSpinner.getValue() instanceof Integer) {
+                tabSize.set((int) tabSizeSpinner.getValue());
+            }
+            autoIndent.set(autoIndentCheckBox.isSelected());
+        }));
 
         detailPanel.add(tabSizeLabel);
         detailPanel.add(tabSizeSpinner, "wrap");

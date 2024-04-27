@@ -20,6 +20,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <app.mainClass>org.example.App</app.mainClass>
         <imageName>SwingApp</imageName>
+        <author>Yor Name</author>
     </properties>
 
     <dependencies>
@@ -111,6 +112,13 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.8.8</version>
+        </dependency>
+
 
     </dependencies>
 

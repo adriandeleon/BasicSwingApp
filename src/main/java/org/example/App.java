@@ -3,10 +3,15 @@ package org.example;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * The App.
@@ -33,7 +38,7 @@ public class App {
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-               showCloseConfirmDialog();
+                showCloseConfirmDialog();
             }
         });
 
@@ -99,11 +104,21 @@ public class App {
      * Show about dialog.
      */
     public static void showAboutDialog() {
-        final String message = """
-                My Swing App
-                Version 1.0
-                Developed by Your Name
-                """;
+        MavenXpp3Reader reader = new MavenXpp3Reader();
+        Model model;
+
+        try (FileReader fileReader = new FileReader("pom.xml")) {
+            model = reader.read(fileReader);
+        } catch (IOException | XmlPullParserException e) {
+            throw new RuntimeException(e);
+        }
+
+        final String message = model.getName() +
+                """
+                        \nVersion:\s""" + model.getVersion() +
+                """
+                        \nDeveloped by:\s""" + model.getProperties().getProperty("author");
+
         final String title = "About";
         showMessageDialog(message, title, JOptionPane.INFORMATION_MESSAGE);
     }

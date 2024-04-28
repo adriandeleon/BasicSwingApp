@@ -15,9 +15,11 @@ public class TabPaneTool {
 
         final JPanel editPanel = createEditPanel();
         final JPanel systemInfoPanel = createSystemInfoPanel();
+        final JPanel networkInfoPanel = createNetworkInfoPanel();
 
         tabbedPane.addTab("Edit Me", editPanel);
         tabbedPane.addTab("System Information", systemInfoPanel);
+        tabbedPane.addTab("Network Information", networkInfoPanel);
 
         // Adding the tabbed pane to the center of the frame
         frame.add(tabbedPane, BorderLayout.CENTER);
@@ -43,5 +45,12 @@ public class TabPaneTool {
         systemInfoPanel.add(new JLabel("System Information"));
 
         return systemInfoPanel;
+    }
+
+    public static JPanel createNetworkInfoPanel(){
+        final JPanel networkInfoPanel = new JPanel();
+        networkInfoPanel.add(new JLabel("Network Information"));
+
+        return networkInfoPanel;
     }
 }

@@ -16,17 +16,46 @@ import java.util.Map;
 import java.util.Optional;
 
 
+/**
+ * The type Config tool.
+ */
 @UtilityClass
 public class ConfigTool {
 
+    /**
+     * The constant CONFIG_STRING_APP_UI_THEME.
+     */
     public static String CONFIG_STRING_APP_UI_THEME = "app.ui.theme";
+    /**
+     * The constant CONFIG_STRING_APP_UI_FONT_SIZE.
+     */
     public static String CONFIG_STRING_APP_UI_FONT_SIZE = "app.ui.fontsize";
+    /**
+     * The constant userHomeDirectory.
+     */
     public static final String userHomeDirectory = System.getProperty("user.home");
+    /**
+     * The constant appConfigDirectory.
+     */
     public static final String appConfigDirectory = ".SwingApp";
+    /**
+     * The constant appConfigFile.
+     */
     public static final String appConfigFile = "SwingApp.conf";
+    /**
+     * The constant configDir.
+     */
     public static final Path configDir = Paths.get(userHomeDirectory, appConfigDirectory);
+    /**
+     * The constant configFile.
+     */
     public static final Path configFile = Paths.get(userHomeDirectory, appConfigDirectory, appConfigFile);
 
+    /**
+     * Read config optional.
+     *
+     * @return the optional
+     */
     public static Optional<Config> readConfig() {
 
         //Check if the config file exists, if not create a default version
@@ -70,6 +99,11 @@ public class ConfigTool {
         return Optional.empty();
     }
 
+    /**
+     * Write config.
+     *
+     * @param modifications the modifications
+     */
     public static void writeConfig(final Map<String, Object> modifications) {
         Config modifiedConfig = null;
         try {

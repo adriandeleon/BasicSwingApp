@@ -2,6 +2,7 @@ package org.example.ui;
 
 import lombok.experimental.UtilityClass;
 import net.miginfocom.swing.MigLayout;
+import org.example.App;
 
 import javax.swing.*;
 
@@ -18,12 +19,9 @@ public class MainContentPanelTool {
      */
     public static JPanel setupContentPanel() {
         final JPanel contentPanel = new JPanel(new MigLayout("", "[grow]", "[]10[]"));
-        final JLabel label = new JLabel("Hello, Swing!");
-        final JButton button = new JButton("Click Me");
 
-        button.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: Button Clicked!"));
-        contentPanel.add(label, "wrap");
-        contentPanel.add(button);
+        final JTabbedPane tabbedPane = TabPaneTool.createTabPane(App.mainFrame);
+        contentPanel.add(tabbedPane, "cell 0 0,grow");
 
         return contentPanel;
     }

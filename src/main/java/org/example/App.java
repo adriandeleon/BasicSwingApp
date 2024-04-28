@@ -1,6 +1,8 @@
 package org.example;
 
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.fonts.inter.FlatInterFont;
 import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
 import org.example.ui.*;
@@ -25,6 +27,10 @@ public class App {
      * @param args the input arguments
      */
     public static void main(String[] args) {
+
+        FlatLaf.setPreferredFontFamily( FlatInterFont.FAMILY );
+        FlatLaf.setPreferredLightFontFamily( FlatInterFont.FAMILY_LIGHT );
+        FlatLaf.setPreferredSemiboldFontFamily( FlatInterFont.FAMILY_SEMIBOLD );
         FlatLightLaf.setup();
 
         SwingUtilities.invokeLater(() -> {

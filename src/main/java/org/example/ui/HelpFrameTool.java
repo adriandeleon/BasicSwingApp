@@ -15,27 +15,31 @@ public class HelpFrameTool {
     public static void showHelpFrame(final JFrame frame) {
         Objects.requireNonNull(frame, "frame must not be null");
 
-        final JFrame helpFrame = new JFrame("Help");
-        final JFXPanel jfxPanel = new JFXPanel();
+        if(App.helpFrame == null) {
 
-        helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        helpFrame.setSize(600, 800);
-        helpFrame.setLocationRelativeTo(frame);
+            final JFrame helpFrame = new JFrame("Help");
+            final JFXPanel jfxPanel = new JFXPanel();
 
-        helpFrame.add(jfxPanel);
+            helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            helpFrame.setSize(600, 800);
+            helpFrame.setLocationRelativeTo(frame);
 
-        Platform.runLater(() -> {
-            WebView webView = new WebView();
-            try {
-                webView.getEngine().load("http://example.com");
-            } catch (Exception e) {
-                // Insert appropriate error handling here
-            }
-            jfxPanel.setScene(new Scene(webView));
-        });
+            helpFrame.add(jfxPanel);
 
-        helpFrame.setVisible(true);
+            Platform.runLater(() -> {
+                final WebView webView = new WebView();
+                try {
+                    webView.getEngine().load("http://example.com");
+                } catch (Exception e) {
+                    // Insert appropriate error handling here
+                }
+                jfxPanel.setScene(new Scene(webView));
+            });
 
-        App.updateHelpFrame(helpFrame);
+            helpFrame.setVisible(true);
+            App.updateHelpFrame(helpFrame);
+        }else {
+            App.helpFrame.setVisible(true);
+        }
     }
 }

@@ -16,11 +16,10 @@ public class HelpFrameTool {
         Objects.requireNonNull(frame, "frame must not be null");
 
         if(App.helpFrame == null) {
-
             final JFrame helpFrame = new JFrame("Help");
             final JFXPanel jfxPanel = new JFXPanel();
 
-            helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            helpFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             helpFrame.setSize(600, 800);
             helpFrame.setLocationRelativeTo(frame);
 

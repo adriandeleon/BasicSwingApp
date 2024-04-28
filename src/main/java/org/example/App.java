@@ -3,6 +3,7 @@ package org.example;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.fonts.inter.FlatInterFont;
+import com.formdev.flatlaf.fonts.jetbrains_mono.FlatJetBrainsMonoFont;
 import com.formdev.flatlaf.util.SystemInfo;
 import com.typesafe.config.Config;
 import net.miginfocom.swing.MigLayout;
@@ -94,6 +95,7 @@ public class App {
         if(SystemInfo.isWindows) {
             //Do Windows stuff here
         }
+        FlatJetBrainsMonoFont.install();
 
         FlatLaf.setPreferredFontFamily(FlatInterFont.FAMILY);
         FlatLaf.setPreferredLightFontFamily(FlatInterFont.FAMILY_LIGHT);

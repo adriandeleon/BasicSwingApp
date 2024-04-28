@@ -55,6 +55,7 @@ public class CommonDialogsTool {
         final MavenXpp3Reader reader = new MavenXpp3Reader();
         final Model model;
 
+        //FIXME: this does not work on Linux or MacOS.
         try (FileReader fileReader = new FileReader("pom.xml")) {
             model = reader.read(fileReader);
         } catch (IOException | XmlPullParserException e) {

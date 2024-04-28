@@ -28,14 +28,14 @@ Here are a few screenshots:
 
 ## Building and running the app.
 
-You have three options for running your app:
+You have three options for building and running your app:
 - Use a Fat Jar.
-- Create a Installer.
+- Create an installer.
 - Compile your app as a native executable for your platform.
 
 Each one has its pros and cons: A Fat Jar needs a JDK installed on your computer to run, but it is completely platform independent.
 
-You can create an installer with `jpackage`, This will create a self-running app with a custom JDK packaged for your platform. You will need to create one for each platform (Linux, MacOS and Windows)
+You can create an installer with `jpackage`, This will create a self-running app with a custom JDK packaged for your platform. You will need to create one for each platform (Linux, macOS and Windows)
 
 You can also use [GraalVM](https://www.graalvm.org/) to create a native executable. Your app is no longer platform independent, You will also need to instrument your app before compiling it to an executable.
 
@@ -48,11 +48,11 @@ mvn clean package
 ```
 Then look in the `target` folder for a file with the following name:
 
-`SwingApp-X.X-SNAPSHOT-shaded.jar`
+`SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar`
 
 to run the app:
 ```shell
-java -jar SwingApp-X.X-SNAPSHOT-shaded.jar
+java -jar SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 ### Create an application installer with jpackage:
@@ -64,7 +64,7 @@ mvn clean package
 ```
 Change to  the target folder and run this `jpackage` command: 
 ```shell
- jpackage --input . --name SwingApp --main-jar .\SwingApp-X.X-SNAPSHOT-shaded.jar --main-class org.example.App --type exe --java-options '--enable-preview'
+ jpackage --input . --name SwingApp --main-jar .\SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar --main-class org.example.App --type msi --java-options '--enable-preview'
 ```
 Where --type can be one of these options:
 
@@ -111,7 +111,7 @@ You will need to run your app with the graalvm agent to pick up all the reflecti
 
 Run this command in your target directory:
 ```shell
-java -agentlib:native-image-agent=config-output-dir=config -jar SwingApp-X.X-SNAPSHOT-shaded.jar
+java -agentlib:native-image-agent=config-output-dir=config -jar SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar
 ```
 This will run your app with the `native-image-agent`. Click and navigate all around the app, this is important so that the agent picks up all the reflection/dynamic JNI calls.
 
@@ -119,17 +119,16 @@ Once that is done, when you exit the app, the agent will have created a `config`
 
 For native compiling, you will need a C development setup for your platform, for Linux that means GCC and friends, and an on Mac you can also use GCC or XCode. 
 
-
 On Windows you will need to install the [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022).
 
 Now we can create the native executable. Go to the `target` folder and run the following command:
 
 ```shell
-native-image --no-fallback -H:ConfigurationFileDirectories=config -J-Xmx16G -jar .\SwingApp-X.X-SNAPSHOT-shaded.jar
+native-image --no-fallback -H:ConfigurationFileDirectories=config -J-Xmx16G -jar .\SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar
 ```
 Compiling a native executable takes a lot om memory, so try to give it as much as you can, the default is 16GB `-J-Xmx16GB`
 
-You should see someting similar to this:
+You should see something similar to this:
 
 ```shell
 ========================================================================================================================
@@ -172,7 +171,7 @@ Top 10 origins of code area:                                Top 10 object types 
    8.60MB java.base                                            3.39MB byte[] for java.lang.String
    3.76MB svm.jar (Native Image)                               1.99MB java.lang.String
    3.63MB java.xml                                             1.89MB java.lang.Class
-   2.30MB SwingApp-1.0-SNAPSHOT-shaded.jar                   553.17kB byte[] for reflection metadata
+   2.30MB SwingApp-1.0-SNAPSHOT-jar-with-dependencies.jar                   553.17kB byte[] for reflection metadata
  191.94kB com.oracle.svm.svm_enterprise                      478.55kB byte[] for general heap data
  153.93kB java.logging                                       439.13kB com.oracle.svm.core.hub.DynamicHubCompanion
  130.51kB java.datatransfer                                  294.19kB java.util.HashMap$Node
@@ -204,14 +203,14 @@ Produced artifacts:
  S:\src\java\swing\BasicSwingApp\target\jsound.dll (jdk_library)
  S:\src\java\swing\BasicSwingApp\target\jvm.dll (jdk_library_shim)
  S:\src\java\swing\BasicSwingApp\target\lcms.dll (jdk_library)
- S:\src\java\swing\BasicSwingApp\target\SwingApp-1.0-SNAPSHOT-shaded.exe (executable)
+ S:\src\java\swing\BasicSwingApp\target\SwingApp-1.0-SNAPSHOT-jar-with-dependencies.exe (executable)
 ========================================================================================================================
-Finished generating 'SwingApp-1.0-SNAPSHOT-shaded' in 44.8s.
+Finished generating 'SwingApp-1.0-SNAPSHOT-jar-with-dependencies' in 44.8s.
 ```
 Once finished, go to the `target` folder and look for the SwingApp-X.X-SNAPSHOT-shaded executable. 
 
 If you are getting the following error: `Exception in thread "main" java.lang.Error: java.home property not set`, this is a current bug in GraalVM. The workaround is to include the following parameter while running your executable:
 ```shell
-SwingApp-X.X-SNAPSHOT-shaded.exe -Djava.home="%JAVA_HOME%"
+SwingApp-X.X-SNAPSHOT-jar-with-dependencies.exe -Djava.home="%JAVA_HOME%"
 ```
 

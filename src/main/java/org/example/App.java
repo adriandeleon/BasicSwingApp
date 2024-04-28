@@ -21,6 +21,7 @@ public class App {
     public static JLabel statusLabel;
     public static JFrame mainFrame;
     public static JFrame configFrame;
+    public static JFrame helpFrame;
     public static Config config;
 
     /**
@@ -119,5 +120,9 @@ public class App {
                 CommonDialogsTool.showCloseConfirmDialog(mainFrame);
             }
         });
+    }
+
+    public static void updateHelpFrame(final JFrame frame) {
+        SwingUtilities.invokeLater(() -> App.helpFrame = frame);
     }
 }

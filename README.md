@@ -117,7 +117,7 @@ This will run your app with the `native-image-agent`. Click and navigate all aro
 
 Once that is done, when you exit the app, the agent will have created a `config` folder on the `target` folder.
 
-For native compiling, you will need a C development setup for your platform, for Linux that means GCC and friends, and an on Mac you can also use GCC or XCode. 
+For native compiling, you will need a C development setup for your platform, for Linux that means GCC and friends, and an on macOS you can also use GCC or XCode. 
 
 On Windows you will need to install the [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022).
 
@@ -127,6 +127,17 @@ Now we can create the native executable. Go to the `target` folder and run the f
 native-image --no-fallback -H:ConfigurationFileDirectories=config -J-Xmx16G -jar .\SwingApp-X.X-SNAPSHOT-jar-with-dependencies.jar
 ```
 Compiling a native executable takes a lot om memory, so try to give it as much as you can, the default is 16GB `-J-Xmx16GB`
+
+If you get the following error on Linux (Debian 12):
+```shell
+/usr/bin/ld: cannot find -lz: No such file or directory
+```
+
+Install the following package: 
+
+```shell
+apt install libz-dev
+```
 
 You should see something similar to this:
 

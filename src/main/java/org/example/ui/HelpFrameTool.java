@@ -10,8 +10,16 @@ import org.example.App;
 import javax.swing.*;
 import java.util.Objects;
 
+/**
+ * The type Help frame tool.
+ */
 @UtilityClass
 public class HelpFrameTool {
+    /**
+     * Show help frame.
+     *
+     * @param frame the frame
+     */
     public static void showHelpFrame(final JFrame frame) {
         Objects.requireNonNull(frame, "frame must not be null");
 

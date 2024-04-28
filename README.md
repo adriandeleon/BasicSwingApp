@@ -2,6 +2,30 @@
 
 [![Java CI with Maven](https://github.com/adriandeleon/BasicSwingApp/actions/workflows/maven.yml/badge.svg)](https://github.com/adriandeleon/BasicSwingApp/actions/workflows/maven.yml)
 
+## Description
+
+A basic Java Swing application template, it includes a few features like:
+- [FlatLaf](https://www.formdev.com/flatlaf/) support.
+- Configuration frame
+- [HOCON](https://lightbend.github.io/config/) config file support.
+- Fat Jar support.
+- jpackage instructions.
+- GraalVM native executable instructions.
+
+Here are a few screenshots:
+
+### Windows
+
+![img.png](docs/images/windows-SwingApp.png)
+
+### Linux
+
+![img.png](docs/images/linux-SwingApp.png)
+
+### Mac
+
+![img.png](docs/images/macos-SwingApp.png)
+
 ## Building and running the app.
 
 You have three options for running your app:

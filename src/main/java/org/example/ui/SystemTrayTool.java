@@ -1,4 +1,4 @@
-package org.example;
+package org.example.ui;
 
 import lombok.experimental.UtilityClass;
 
@@ -63,7 +63,7 @@ public class SystemTrayTool {
                     frame.setState(JFrame.NORMAL);
                 }
             });
-            exitItem.addActionListener(e -> App.showCloseConfirmDialog());
+            exitItem.addActionListener(e -> CommonDialogsTool.showCloseConfirmDialog(frame));
 
             popupMenu.add(openItem);
             popupMenu.add(exitItem);

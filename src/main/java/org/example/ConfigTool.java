@@ -6,18 +6,14 @@ import com.typesafe.config.ConfigValueFactory;
 import com.typesafe.config.parser.ConfigDocument;
 import com.typesafe.config.parser.ConfigDocumentFactory;
 import lombok.experimental.UtilityClass;
+import org.example.ui.CommonDialogsTool;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.example.App.config;
-import static org.example.App.showErrorDialog;
 
 @UtilityClass
 public class ConfigTool {
@@ -79,20 +75,20 @@ public class ConfigTool {
             for (Map.Entry<String, Object> entry : modifications.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
-                modifiedConfig = config.withValue(key, ConfigValueFactory.fromAnyRef(value));
+                modifiedConfig = App.config.withValue(key, ConfigValueFactory.fromAnyRef(value));
             }
 
             // Render the modified Config object back to a ConfigDocument.
             final ConfigDocument modifiedDocument = ConfigDocumentFactory.parseString(modifiedConfig.root().render());
 
             // Save the modified ConfigDocument to the file.
-            Files.writeString(configFile, modifiedDocument.render());
+            Files.writeString(configFile, modifiedDocument.render(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
             //Reload the modified config from file.
             if(readConfig().isEmpty()) {
-                showErrorDialog("Error opening configuration file.");
+               CommonDialogsTool.showErrorDialog(App.mainFrame, "Error opening configuration file.");
             }
-            config = readConfig().get();
+            App.config = readConfig().get();
 
             System.out.println("Configuration updated successfully.");
         } catch (IOException e) {

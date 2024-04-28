@@ -1,10 +1,11 @@
-package org.example;
+package org.example.ui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.experimental.UtilityClass;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.Validate;
+import org.example.ConfigTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,8 +118,8 @@ public class ConfigFrameTool {
         final JCheckBox autoIndentCheckBox = new JCheckBox("Auto Indent");
         final JButton applyButton = new JButton("Apply");
 
-        AtomicInteger tabSize = new AtomicInteger();
-        AtomicBoolean autoIndent = new AtomicBoolean(false);
+        final AtomicInteger tabSize = new AtomicInteger();
+        final AtomicBoolean autoIndent = new AtomicBoolean(false);
 
         SwingUtilities.invokeLater(() -> applyButton.addActionListener(e -> {
             if(tabSizeSpinner.getValue() instanceof Integer) {

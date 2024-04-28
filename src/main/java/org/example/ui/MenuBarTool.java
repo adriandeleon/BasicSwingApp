@@ -1,6 +1,7 @@
-package org.example;
+package org.example.ui;
 
 import lombok.experimental.UtilityClass;
+import org.example.App;
 
 import javax.swing.*;
 
@@ -9,6 +10,11 @@ import javax.swing.*;
  */
 @UtilityClass
 public class MenuBarTool {
+    /**
+     * Create menu bar j menu bar.
+     *
+     * @return the j menu bar
+     */
     public static JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
 
@@ -32,10 +38,10 @@ public class MenuBarTool {
         final JMenuItem closeApp = new JMenuItem("Close");
 
         // Add action listeners to menu items
-        newItem.addActionListener(e -> App.updateStatusLabel("Status: New File Created!"));
-        openItem.addActionListener(e -> App.updateStatusLabel("Status: File Opened!"));
-        saveItem.addActionListener(e -> App.updateStatusLabel("Status: File Saved!"));
-        closeApp.addActionListener(e -> App.showCloseConfirmDialog());
+        newItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: New File Created!"));
+        openItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: File Opened!"));
+        saveItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: File Saved!"));
+        closeApp.addActionListener(e -> CommonDialogsTool.showCloseConfirmDialog(App.mainFrame));
         configItem.addActionListener(e -> ConfigFrameTool.showConfigFrame());
 
         // Add menu items to menus
@@ -58,9 +64,9 @@ public class MenuBarTool {
         final JMenuItem pasteItem = new JMenuItem("Paste");
 
         // Add action listeners
-        cutItem.addActionListener(e -> App.updateStatusLabel("Status: Cut!"));
-        copyItem.addActionListener(e -> App.updateStatusLabel("Status: Copy!"));
-        pasteItem.addActionListener(e -> App.updateStatusLabel("Status: Paste!"));
+        cutItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: Cut!"));
+        copyItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: Copy!"));
+        pasteItem.addActionListener(e -> StatusPanelTool.updateStatusLabel("Status: Paste!"));
 
         // Add to menu
         editMenu.add(cutItem);
@@ -78,10 +84,10 @@ public class MenuBarTool {
         final JMenuItem aboutItem = new JMenuItem("About");
 
         // Add action listeners
-        userGuideItem.addActionListener(e -> App.showUserGuide());
-        aboutItem.addActionListener(e -> App.showAboutDialog());
+        userGuideItem.addActionListener(e -> CommonDialogsTool.showUserGuide(App.mainFrame));
+        aboutItem.addActionListener(e -> CommonDialogsTool.showAboutDialog(App.mainFrame));
 
-        // Add to menu
+        // Add to the menu.
         helpMenu.add(userGuideItem);
         helpMenu.add(aboutItem);
 

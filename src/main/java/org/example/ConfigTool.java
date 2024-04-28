@@ -2,6 +2,7 @@ package org.example;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigRenderOptions;
 import com.typesafe.config.ConfigValueFactory;
 import com.typesafe.config.parser.ConfigDocument;
 import com.typesafe.config.parser.ConfigDocumentFactory;
@@ -78,11 +79,9 @@ public class ConfigTool {
                 modifiedConfig = App.config.withValue(key, ConfigValueFactory.fromAnyRef(value));
             }
 
-            // Render the modified Config object back to a ConfigDocument.
-            final ConfigDocument modifiedDocument = ConfigDocumentFactory.parseString(modifiedConfig.root().render());
-
+            final String serializedConfig = modifiedConfig.root().render(ConfigRenderOptions.concise().setFormatted(true).setJson(false));
             // Save the modified ConfigDocument to the file.
-            Files.writeString(configFile, modifiedDocument.render(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.writeString(configFile, serializedConfig, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
             //Reload the modified config from file.
             if(readConfig().isEmpty()) {

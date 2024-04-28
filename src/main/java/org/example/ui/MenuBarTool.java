@@ -84,12 +84,8 @@ public class MenuBarTool {
         final JMenuItem aboutItem = new JMenuItem("About");
 
         // Add action listeners
-        //userGuideItem.addActionListener(e -> CommonDialogsTool.showUserGuide(App.mainFrame));
         userGuideItem.addActionListener(e -> HelpFrameTool.showHelpFrame(App.mainFrame));
-        /*SwingUtilities.invokeLater(() ->{
-                    userGuideItem.addActionListener(e -> HelpFrameTool.showHelpFrame(App.mainFrame));
-                });
-        aboutItem.addActionListener(e -> CommonDialogsTool.showAboutDialog(App.mainFrame));*/
+        aboutItem.addActionListener(e -> CommonDialogsTool.showAboutDialog(App.mainFrame));
 
         // Add to the menu.
         helpMenu.add(userGuideItem);

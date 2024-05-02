@@ -8,6 +8,8 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import javax.swing.*;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 /**
@@ -56,8 +58,9 @@ public class CommonDialogsTool {
         final Model model;
 
         //FIXME: this does not work on Linux or MacOS.
-        try (FileReader fileReader = new FileReader("pom.xml")) {
-            model = reader.read(fileReader);
+        final InputStream inputStream = CommonDialogsTool.class.getResourceAsStream("/pom.xml");
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
+            model = reader.read(inputStreamReader);
         } catch (IOException | XmlPullParserException e) {
             throw new RuntimeException(e);
         }

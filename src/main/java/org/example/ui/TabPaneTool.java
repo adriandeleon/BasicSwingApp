@@ -11,6 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 @UtilityClass
 public class TabPaneTool {
@@ -91,7 +95,39 @@ public class TabPaneTool {
 
     public static JPanel createNetworkInfoPanel(){
         final JPanel networkInfoPanel = new JPanel();
+        networkInfoPanel.setLayout((new BoxLayout(networkInfoPanel, BoxLayout.Y_AXIS)));
         networkInfoPanel.add(new JLabel("Network Information"));
+
+        try {
+            // Get a list of all network interfaces
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                final NetworkInterface networkInterface = interfaces.nextElement();
+
+                // Filter out loopback and inactive interfaces
+                if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                    continue;
+                }
+
+                final JPanel interfacePanel = new JPanel();
+                interfacePanel.setLayout(new GridLayout(0, 2)); // 0 means any number of rows, 2 columns
+                interfacePanel.setBorder(BorderFactory.createTitledBorder("Interface: " + networkInterface.getDisplayName()));
+
+                // Add details about the network interface
+                interfacePanel.add(new JLabel("Name:"));
+                interfacePanel.add(new JLabel(networkInterface.getName()));
+
+                // List all IP addresses assigned to this network interface
+                Collections.list(networkInterface.getInetAddresses()).forEach(address -> {
+                    interfacePanel.add(new JLabel("Address:"));
+                    interfacePanel.add(new JLabel(address.toString()));
+                });
+
+                networkInfoPanel.add(interfacePanel);
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         return networkInfoPanel;
     }

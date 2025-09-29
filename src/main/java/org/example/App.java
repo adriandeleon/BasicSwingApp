@@ -14,9 +14,11 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * The App.
- */
+/// The App class serves as the main entry point for the Swing-based application.
+/// It is responsible for initializing the user interface and configuring is necessary settings
+/// for different operating systems.
+///  This class also sets up the main application frame,
+/// status bar, menus, and system tray functionality.
 public class App {
     public static JLabel statusLabel;
     public static JFrame mainFrame;
@@ -24,12 +26,11 @@ public class App {
     public static JFrame helpFrame;
     public static Config config;
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
-    public static void main(String[] args) {
+    /// The main entry point for the application.
+    /// Initializes and sets up the application's main graphical user interface (GUI),
+    /// including configuration loading, theme setup, toolbar, content panel, and system tray.
+    ///
+    public static void main() {
         setupFlatLaf();
 
         SwingUtilities.invokeLater(() -> {
@@ -66,14 +67,24 @@ public class App {
         });
     }
 
+    /// Configures and initializes the FlatLaf look-and-feel settings for the application.
+    /// This method adjusts platform-specific properties and preferences for macOS, Linux, and
+    /// Windows to ensure a consistent appearance and behavior of the user interface.
+    ///  It also installs custom fonts and applies a specific theme using FlatLaf.
+    /// Key setups include:
+    /// - On macOS, enables the screen menu bar, sets the application name, and configures
+    ///   the appearance of window title bars.
+    /// - On Linux, enables custom window decorations for JFrame and JDialog components.
+    /// - Applies custom font preferences for the application UI using FlatLaf.
+    /// - Configures FlatLaf to use the FlatLightLaf theme as the preferred style.
     private static void setupFlatLaf() {
         if (SystemInfo.isMacOS) {
-            // Enable screen menu bar.
+            // Enable a screen menu bar.
             // (moves menu bar from JFrame window to top of screen)
             System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-            // application name used in screen menu bar
-            // (in first menu after the "apple" menu)
+            // application name used in the screen menu bar
+            // (in the first menu after the "apple" menu)
             System.setProperty("apple.awt.application.name", "SwingApp");
 
             // Appearance of window title bars.
@@ -81,7 +92,7 @@ public class App {
             //   - "system": use current macOS appearance (light or dark)
             //   - "NSAppearanceNameAqua": use light appearance
             //   - "NSAppearanceNameDarkAqua": use dark appearance
-            // (must be set on main thread and before AWT/Swing is initialized;
+            // (must be set on the main thread and before AWT/Swing is initialized;
             //  setting it on AWT thread does not work)
             System.setProperty("apple.awt.application.appearance", "system");
         }
@@ -107,6 +118,18 @@ public class App {
         FlatLightLaf.setup();
     }
 
+    /// Sets up the main application frame.
+    /// This method initializes the application's primary graphical user interface
+    /// component, including setting the frame title, size, and default close
+    /// operation.
+    ///  Additionally, it registers a window listener to handle
+    /// custom behavior when the user attempts to close the application, such
+    /// as prompting for confirmation using a dialog.
+    /// Key configurations include:
+    /// - Setting the title of the frame to "My Swing App".
+    /// - Defining the default close operation as DO_NOTHING_ON_CLOSE to ensure
+    ///   the application does not close immediately when the close button is clicked.
+    /// - Adding a `WindowListener` to provide a confirmation dialog before closing.
     private static void setupMainFrame() {
         // Create the main frame of the app.
         mainFrame = new JFrame("My Swing App");
@@ -122,6 +145,11 @@ public class App {
         });
     }
 
+    /// Updates the application's help frame.
+    /// This method sets the provided JFrame instance as the new help frame
+    /// within the application using the Event Dispatch Thread (EDT).
+    ///
+    /// @param frame the new JFrame to be set as the help frame
     public static void updateHelpFrame(final JFrame frame) {
         SwingUtilities.invokeLater(() -> App.helpFrame = frame);
     }

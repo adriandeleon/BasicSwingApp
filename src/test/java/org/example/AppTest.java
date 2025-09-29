@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit test for simple App.
+ * Unit test for a simple App.
  */
 public class AppTest {
 
